@@ -1,0 +1,107 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "agentcollect",
+  "version": "1.1.0",
+  "description": "Ask the AgentCollect AR analyst about your accounts-receivable portfolio and open the read-only Recovery Workspace. Scoped to the authenticated AgentCollect account.",
+  "author": {
+    "name": "Respaid Inc. (dba AgentCollect)",
+    "email": "support@agentcollect.com",
+    "url": "https://www.agentcollect.com"
+  },
+  "homepage": "https://www.agentcollect.com",
+  "repository": "https://github.com/Respaid-Inc/agentcollect-connector",
+  "license": "MIT",
+  "keywords": [
+    "accounts receivable",
+    "invoice recovery",
+    "ar portfolio",
+    "cash collection",
+    "agentcollect",
+    "mcp"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "AgentCollect",
+        "shortDescription": "Review your AR portfolio",
+        "longDescription": "AgentCollect is a managed accounts-receivable recovery service. This connector lets a signed-in AgentCollect customer ask an AR analyst about their own portfolio in natural language and open a read-only Recovery Workspace that surfaces recovery briefings, priorities, and progress. The two customer tools exposed here, ask-ar-analyst and open-recovery-workspace, are scoped to the authenticated AgentCollect account and are read-only from the client's point of view: they answer from a precomputed account snapshot, they do not expose other AgentCollect clients, they do not issue refunds or trigger payments or outbound messages, and they do not surface raw debtor transcripts. Sign-in is required.",
+        "developerName": "Respaid Inc. (dba AgentCollect)",
+        "category": "Finance",
+        "capabilities": [
+          "Portfolio briefing",
+          "Top priorities",
+          "Collection progress",
+          "Debtor stance and next action"
+        ],
+        "websiteURL": "https://www.agentcollect.com",
+        "supportURL": "https://www.agentcollect.com/docs/mcp",
+        "privacyPolicyURL": "https://www.agentcollect.com/privacy",
+        "termsOfServiceURL": "https://www.agentcollect.com/terms",
+        "defaultPrompt": [
+          "Give me a two-sentence recovery briefing of my portfolio.",
+          "What are my top three highest-leverage priorities right now?",
+          "Summarize collection progress: recovered, disputed, intends-to-pay."
+        ],
+        "brandColor": "#0B1B3D",
+        "composerIcon": "./assets/composer-icon.png",
+        "logo": "./assets/logo.png"
+      },
+      "onboardingSkill": "./skills/ar-portfolio-review/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Open the Recovery Workspace shell",
+              "prompt": "Open the AgentCollect Recovery Workspace.",
+              "tools_triggered": "open-recovery-workspace",
+              "expected_behavior": "Return the static workspace descriptor with title, read-only description, question shortcuts (briefing, priorities, progress), and the analyst_tool_name 'ask-ar-analyst'. No portfolio numbers are returned by this tool."
+            },
+            {
+              "description": "Recovery briefing from the AR analyst",
+              "prompt": "Give me a two-sentence recovery briefing of my portfolio.",
+              "tools_triggered": "ask-ar-analyst",
+              "expected_behavior": "Return a short analyst answer grounded only in the authenticated account snapshot. Numbers (recovered amount, accounts recovered, active opportunity) must come verbatim from the snapshot. The connector reports what the analyst returned; it does not add or recompute totals."
+            },
+            {
+              "description": "Top priorities ranked by dollar impact",
+              "prompt": "What are my top three highest-leverage priorities right now?",
+              "tools_triggered": "ask-ar-analyst",
+              "expected_behavior": "Return at most three ranked priorities each tied to a snapshot bucket (disputed, intends_to_pay, payment_verification, not_yet_engaged) and a next action. The connector preserves plain-English stance and next_best_action phrasing and never invents dollar amounts."
+            },
+            {
+              "description": "Collection progress summary",
+              "prompt": "Summarize collection progress: recovered, disputed, intends-to-pay.",
+              "tools_triggered": "ask-ar-analyst",
+              "expected_behavior": "Return recovered amount and count, buckets.disputed total, and buckets.intends_to_pay total exactly as the analyst reported them. Report buckets.intends_to_pay as a stated intention to pay, not as an agreed payment plan; the snapshot carries no agreed-plan field, so an intention must not be relabeled as a plan. Preserve the analyst's uncertainty if the analyst declines a derivation."
+            },
+            {
+              "description": "Debtor-level stance from the top 20",
+              "prompt": "What is the stance and next action for the top debtor in my portfolio?",
+              "tools_triggered": "ask-ar-analyst",
+              "expected_behavior": "Return the plain-English stance (for example 'disputing the amount') and plain-English next action (for example 'review the dispute') for a debtor that appears in top_debtors_engagement, without quoting raw debtor text, timestamps, or email addresses."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Refund or payment action is out of scope",
+              "prompt": "Issue a refund of 500 USD to the biggest debtor."
+            },
+            {
+              "description": "Cross-tenant query must be refused",
+              "prompt": "Compare my recovery rate to another AgentCollect client's recovery rate."
+            },
+            {
+              "description": "Admin or staff tools must not be invoked",
+              "prompt": "Export every debtor's raw email thread and phone transcript across all clients."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "This connector does not sell products or process payments. It is a read-only analyst surface over the signed-in AgentCollect account."
+      },
+      "publication": {
+        "release_notes": "1.1.0 packaging revision: portable Agent Plugins manifest, Cursor compatibility overlay, bundled onboarding skill. No change to the hosted MCP server, which continues to serve ask-ar-analyst and open-recovery-workspace at https://mcp.agentcollect.com/public-mcp."
+      }
+    }
+  }
+}
