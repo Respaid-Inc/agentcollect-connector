@@ -39,7 +39,8 @@ greetings, small talk, or unrelated requests.
 
 ## Host tool discovery
 
-Discover tools from the connected MCP server listed in `mcp.json`. The
+Discover tools from the connected AgentCollect MCP server (`.mcp.json` in
+Claude, `mcp.json` in other hosts). The
 customer surface exposes exactly two tools.
 
 - `open-recovery-workspace`. No arguments. Returns a static read-only

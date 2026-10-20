@@ -3,8 +3,9 @@
 AgentCollect is a managed accounts-receivable recovery service. This package
 is a thin, portable Agent Plugins 1.0.0 connector that lets a signed-in
 AgentCollect customer talk to their own AR analyst and open a read-only
-Recovery Workspace from a compatible host (for example a ChatGPT-style
-app directory or Cursor's plugin catalog).
+Recovery Workspace from a compatible host, including Claude (claude.ai,
+Cowork, Claude Code) through the Claude plugin format in `.claude-plugin/`
+and `.mcp.json`, and Cursor's plugin catalog.
 
 The connector is a wrapper. It carries no credentials and runs no code of
 its own. All answers come from the hosted MCP server at
@@ -50,6 +51,22 @@ grounding and refusal rules the connector follows.
 - No admin, staff, or cross-tenant surfaces are referenced or encouraged
   by this package.
 
+## What this plugin runs, sends, and fetches
+
+- It runs no local code, hooks, scripts, or package installs. It contains
+  only Markdown, JSON, a license, and two PNG images.
+- It references one remote MCP server, `https://mcp.agentcollect.com/public-mcp`,
+  the same server as the AgentCollect connector in the Claude directory.
+  Sign-in uses OAuth 2.1 with dynamic client registration, PKCE (S256), and
+  the single scope `mcp:read`.
+- When you call `ask-ar-analyst`, your question is sent to that server, which
+  answers from your account's precomputed AR snapshot using an AI model run by
+  AgentCollect or its subprocessors. `open-recovery-workspace` sends no
+  arguments and returns a static descriptor.
+- The server keeps an audit log of each tool call (the request message, IP
+  address, and user agent). See the privacy policy for retention.
+- The plugin sends nothing to any other destination.
+
 ## Compatibility (as intended, not host-tested)
 
 This package is intended to work with hosts that accept the Agent
@@ -60,6 +77,9 @@ particular marketplace or app directory is at that host's discretion.
 
 ## Files
 
+- `.claude-plugin/plugin.json`. Claude plugin manifest (read by claude.ai,
+  Cowork, Claude Code, and the Claude directory).
+- `.mcp.json`. Claude MCP server reference (`type: http`), same URL as below.
 - `plugin.json`. Portable Agent Plugins root manifest, with an
   `extensions.com.openai` interface block for hosts that use it.
 - `mcp.json`. Streamable HTTP MCP server definition pointing at the
