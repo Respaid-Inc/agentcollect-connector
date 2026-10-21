@@ -110,16 +110,20 @@ through this package.
 
 ### Status
 
-- Local manifest validation via `claude --bare plugin validate` was
-  executed against this directory. Result is captured in the sibling
-  `validation.json` next to this bundle (not inside it).
-- Dependency-free local structural tests were run from
-  `/Users/jonathanbanner/.aside/u/0/sessions/2026-10-06_RNY3iaqfKFIqFtpB/tmp/claude-bundle-tests-oct20`.
-- Public branch hosting of this bundle has NOT been done.
-- Submission to the Claude plugin directory / portal validation has NOT
-  been run.
+- Local manifest validation via `claude --bare plugin validate` and
+  dependency-free structural checks were run against this directory.
+- This overlay is publicly hosted ONLY on the feature branch
+  `claude-directory-20261020`; the `main` branch is unchanged.
+- Official Claude portal validation passed 7 checks with zero policy
+  holds against commit `7a3bc02` on 2026-10-20. That portal pass is
+  not Anthropic approval and is not a business end-to-end result.
+- Each subsequent revision requires its own validation; the result
+  above applies only to that commit.
+- This plugin bundle has not been submitted to the directory. Its form
+  is saved only in a browser tab, not as a server-side draft. This is
+  separate from the existing published AgentCollect MCP connector.
 - Synthetic host OAuth sign-in and business E2E against the hosted MCP
-  have NOT been run from this bundle.
+  have NOT been established from this bundle.
 
 ### Scope reminder (important)
 
