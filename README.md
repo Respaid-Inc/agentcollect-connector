@@ -86,3 +86,48 @@ MIT. The license file in this package covers only this thin connector
 wrapper (manifests, overlay, onboarding skill, and bundled brand assets).
 It does not grant rights to the hosted AgentCollect MCP server, the
 AgentCollect backend, or any other AgentCollect service.
+
+## Claude Code overlay (intended, not host-tested)
+
+This bundle is the portable Agent Plugins 1.1.0 wrapper plus a minimal
+Claude Code plugin overlay. Nothing in the portable wrapper changes.
+The overlay adds two files only.
+
+- `.claude-plugin/plugin.json`. Minimal native Claude manifest with
+  `name`, `version`, `description`, `author`, `homepage`, `repository`,
+  and `license`. No invented fields. No permissions, no hooks, no
+  commands, no agents. Skills in `skills/` and MCP servers in `.mcp.json`
+  are picked up by the Claude plugin loader by convention.
+- `.mcp.json`. Remote MCP server entry with `type: "http"` and the
+  canonical `https://mcp.agentcollect.com/public-mcp` URL. No headers,
+  no auth, no credentials, no local command.
+
+The Claude overlay does not deploy, host, or sign any new tool. The
+hosted MCP endpoint and the two customer-scoped tools (`ask-ar-analyst`,
+`open-recovery-workspace`) are unchanged. Sign-in continues to happen
+between the host client and the hosted MCP server; no credentials pass
+through this package.
+
+### Status
+
+- Local manifest validation via `claude --bare plugin validate` was
+  executed against this directory. Result is captured in the sibling
+  `validation.json` next to this bundle (not inside it).
+- Dependency-free local structural tests were run from
+  `/Users/jonathanbanner/.aside/u/0/sessions/2026-10-06_RNY3iaqfKFIqFtpB/tmp/claude-bundle-tests-oct20`.
+- Public branch hosting of this bundle has NOT been done.
+- Submission to the Claude plugin directory / portal validation has NOT
+  been run.
+- Synthetic host OAuth sign-in and business E2E against the hosted MCP
+  have NOT been run from this bundle.
+
+### Scope reminder (important)
+
+The two tools this wrapper surfaces are read-only from the client's
+point of view and are scoped to the signed-in AgentCollect customer's
+own account. This does NOT universally characterize the entire
+AgentCollect platform across account classes: the server performs its
+own audit logging, analyst-side outbound processing exists elsewhere in
+the platform, and this source has not been proven end-to-end from a
+Claude host. Treat the "read-only" claim as a property of this client
+wrapper's two exposed tools only.
