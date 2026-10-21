@@ -70,7 +70,7 @@ particular marketplace or app directory is at that host's discretion.
   no `..` segment.
 - `skills/ar-portfolio-review/SKILL.md`. Onboarding skill with narrow
   when-to-use scope, call patterns, grounding rules, and refusals.
-- `assets/logo.png`, `assets/composer-icon.png`. Brand assets.
+- Bundled brand assets in the assets directory: a logo PNG and a composer icon PNG. Static images only; no code is executed.
 - `LICENSE`. MIT license covering only this thin connector wrapper.
 
 ## Privacy, support, terms
