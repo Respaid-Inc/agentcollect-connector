@@ -1,0 +1,20 @@
+{
+  "name": "agentcollect",
+  "displayName": "AgentCollect",
+  "version": "1.2.0",
+  "description": "Ask the AgentCollect AR analyst about your own accounts-receivable portfolio and open the Recovery Workspace, through the AgentCollect connector, scoped to your signed-in AgentCollect account.",
+  "author": {
+    "name": "Respaid Inc (dba AgentCollect)",
+    "email": "support@agentcollect.com",
+    "url": "https://www.agentcollect.com"
+  },
+  "homepage": "https://www.agentcollect.com",
+  "repository": "https://github.com/Respaid-Inc/agentcollect-connector",
+  "license": "MIT",
+  "keywords": ["accounts receivable", "invoice recovery", "ar portfolio", "agentcollect"],
+  "icon": "./assets/logo.png",
+  "documentationUrl": "https://www.agentcollect.com/docs/mcp",
+  "supportUrl": "https://www.agentcollect.com/docs/mcp",
+  "privacyPolicyUrl": "https://www.agentcollect.com/privacy",
+  "termsOfServiceUrl": "https://www.agentcollect.com/terms"
+}
